@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="src" displayName="src" projectFiles="true" root="..">
+      <logicalFolder name="devices" displayName="devices" projectFiles="true">
+        <itemPath>../devices/block.c</itemPath>
+        <itemPath>../devices/block.h</itemPath>
+        <itemPath>../devices/ide.c</itemPath>
+        <itemPath>../devices/ide.h</itemPath>
+        <itemPath>../devices/input.c</itemPath>
+        <itemPath>../devices/input.h</itemPath>
+        <itemPath>../devices/intq.c</itemPath>
+        <itemPath>../devices/intq.h</itemPath>
+        <itemPath>../devices/kbd.c</itemPath>
+        <itemPath>../devices/kbd.h</itemPath>
+        <itemPath>../devices/partition.c</itemPath>
+        <itemPath>../devices/partition.h</itemPath>
+        <itemPath>../devices/pit.c</itemPath>
+        <itemPath>../devices/pit.h</itemPath>
+        <itemPath>../devices/rtc.c</itemPath>
+        <itemPath>../devices/rtc.h</itemPath>
+        <itemPath>../devices/serial.c</itemPath>
+        <itemPath>../devices/serial.h</itemPath>
+        <itemPath>../devices/shutdown.c</itemPath>
+        <itemPath>../devices/shutdown.h</itemPath>
+        <itemPath>../devices/speaker.c</itemPath>
+        <itemPath>../devices/speaker.h</itemPath>
+        <itemPath>../devices/timer.c</itemPath>
+        <itemPath>../devices/timer.h</itemPath>
+        <itemPath>../devices/vga.c</itemPath>
+        <itemPath>../devices/vga.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="filesys" displayName="filesys" projectFiles="true">
+        <itemPath>../filesys/cache.c</itemPath>
+        <itemPath>../filesys/cache.h</itemPath>
+        <itemPath>../filesys/directory.c</itemPath>
+        <itemPath>../filesys/directory.h</itemPath>
+        <itemPath>../filesys/file.c</itemPath>
+        <itemPath>../filesys/file.h</itemPath>
+        <itemPath>../filesys/filesys.c</itemPath>
+        <itemPath>../filesys/filesys.h</itemPath>
+        <itemPath>../filesys/free-map.c</itemPath>
+        <itemPath>../filesys/free-map.h</itemPath>
+        <itemPath>../filesys/fsutil.c</itemPath>
+        <itemPath>../filesys/fsutil.h</itemPath>
+        <itemPath>../filesys/inode.c</itemPath>
+        <itemPath>../filesys/inode.h</itemPath>
+        <itemPath>../filesys/off_t.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="lib" displayName="lib" projectFiles="true">
+        <logicalFolder name="kernel" displayName="kernel" projectFiles="true">
+          <itemPath>../lib/kernel/bitmap.c</itemPath>
+          <itemPath>../lib/kernel/bitmap.h</itemPath>
+          <itemPath>../lib/kernel/console.c</itemPath>
+          <itemPath>../lib/kernel/console.h</itemPath>
+          <itemPath>../lib/kernel/debug.c</itemPath>
+          <itemPath>../lib/kernel/hash.c</itemPath>
+          <itemPath>../lib/kernel/hash.h</itemPath>
+          <itemPath>../lib/kernel/list.c</itemPath>
+          <itemPath>../lib/kernel/list.h</itemPath>
+          <itemPath>../lib/kernel/stdio.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="user" displayName="user" projectFiles="true">
+          <itemPath>../lib/user/console.c</itemPath>
+          <itemPath>../lib/user/debug.c</itemPath>
+          <itemPath>../lib/user/entry.c</itemPath>
+          <itemPath>../lib/user/syscall.c</itemPath>
+          <itemPath>../lib/user/syscall.h</itemPath>
+        </logicalFolder>
+        <itemPath>../lib/arithmetic.c</itemPath>
+        <itemPath>../lib/ctype.h</itemPath>
+        <itemPath>../lib/debug.c</itemPath>
+        <itemPath>../lib/debug.h</itemPath>
+        <itemPath>../lib/inttypes.h</itemPath>
+        <itemPath>../lib/limits.h</itemPath>
+        <itemPath>../lib/packed.h</itemPath>
+        <itemPath>../lib/random.c</itemPath>
+        <itemPath>../lib/random.h</itemPath>
+        <itemPath>../lib/round.h</itemPath>
+        <itemPath>../lib/stdarg.h</itemPath>
+        <itemPath>../lib/stdbool.h</itemPath>
+        <itemPath>../lib/stddef.h</itemPath>
+        <itemPath>../lib/stdint.h</itemPath>
+        <itemPath>../lib/stdio.c</itemPath>
+        <itemPath>../lib/stdio.h</itemPath>
+        <itemPath>../lib/stdlib.c</itemPath>
+        <itemPath>../lib/stdlib.h</itemPath>
+        <itemPath>../lib/string.c</itemPath>
+        <itemPath>../lib/string.h</itemPath>
+        <itemPath>../lib/syscall-nr.h</itemPath>
+        <itemPath>../lib/ustar.c</itemPath>
+        <itemPath>../lib/ustar.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="tests" displayName="tests" projectFiles="true">
+        <logicalFolder name="userprog" displayName="userprog" projectFiles="true">
+          <itemPath>../tests/userprog/args-dbl-space.ck</itemPath>
+          <itemPath>../tests/userprog/args-many.ck</itemPath>
+          <itemPath>../tests/userprog/args-multiple.ck</itemPath>
+          <itemPath>../tests/userprog/args-none.ck</itemPath>
+          <itemPath>../tests/userprog/args-single.ck</itemPath>
+          <itemPath>../tests/userprog/args.c</itemPath>
+          <itemPath>../tests/userprog/child-bad.c</itemPath>
+          <itemPath>../tests/userprog/child-close.c</itemPath>
+          <itemPath>../tests/userprog/child-rox.c</itemPath>
+          <itemPath>../tests/userprog/child-simple.c</itemPath>
+          <itemPath>../tests/userprog/close-normal.c</itemPath>
+          <itemPath>../tests/userprog/create-empty.c</itemPath>
+          <itemPath>../tests/userprog/create-exists.c</itemPath>
+          <itemPath>../tests/userprog/create-long.c</itemPath>
+          <itemPath>../tests/userprog/create-normal.c</itemPath>
+          <itemPath>../tests/userprog/exec-multiple.c</itemPath>
+          <itemPath>../tests/userprog/exec-once.c</itemPath>
+          <itemPath>../tests/userprog/open-missing.c</itemPath>
+          <itemPath>../tests/userprog/open-normal.c</itemPath>
+          <itemPath>../tests/userprog/open-twice.c</itemPath>
+          <itemPath>../tests/userprog/read-normal.c</itemPath>
+          <itemPath>../tests/userprog/read-zero.c</itemPath>
+          <itemPath>../tests/userprog/sample.inc</itemPath>
+          <itemPath>../tests/userprog/wait-simple.c</itemPath>
+          <itemPath>../tests/userprog/wait-twice.c</itemPath>
+          <itemPath>../tests/userprog/write-normal.c</itemPath>
+          <itemPath>../tests/userprog/write-zero.c</itemPath>
+        </logicalFolder>
+        <itemPath>../tests/lib.c</itemPath>
+        <itemPath>../tests/lib.h</itemPath>
+        <itemPath>../tests/main.c</itemPath>
+        <itemPath>../tests/main.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="threads" displayName="threads" projectFiles="true">
+        <itemPath>../threads/barrier.h</itemPath>
+        <itemPath>../threads/condvar.c</itemPath>
+        <itemPath>../threads/condvar.h</itemPath>
+        <itemPath>../threads/flags.h</itemPath>
+        <itemPath>../threads/init.c</itemPath>
+        <itemPath>../threads/init.h</itemPath>
+        <itemPath>../threads/interrupt.c</itemPath>
+        <itemPath>../threads/interrupt.h</itemPath>
+        <itemPath>../threads/intr-stubs.h</itemPath>
+        <itemPath>../threads/io.h</itemPath>
+        <itemPath>../threads/loader.h</itemPath>
+        <itemPath>../threads/lock.c</itemPath>
+        <itemPath>../threads/lock.h</itemPath>
+        <itemPath>../threads/malloc.c</itemPath>
+        <itemPath>../threads/malloc.h</itemPath>
+        <itemPath>../threads/palloc.c</itemPath>
+        <itemPath>../threads/palloc.h</itemPath>
+        <itemPath>../threads/pte.h</itemPath>
+        <itemPath>../threads/semaphore.c</itemPath>
+        <itemPath>../threads/semaphore.h</itemPath>
+        <itemPath>../threads/switch.h</itemPath>
+        <itemPath>../threads/thread.c</itemPath>
+        <itemPath>../threads/thread.h</itemPath>
+        <itemPath>../threads/vaddr.h</itemPath>
+      </logicalFolder>
+      <itemPath>../Makefile.build</itemPath>
+    </logicalFolder>
+    <df root="." name="0">
+      <in>exception.c</in>
+      <in>gdt.c</in>
+      <in>pagedir.c</in>
+      <in>process.c</in>
+      <in>syscall.c</in>
+      <in>tss.c</in>
+      <in>umem.c</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -msoft-float -O"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>..</pElem>
+              <pElem>../lib</pElem>
+            </incDir>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="../Makefile.build" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../devices/block.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/ide.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/input.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/intq.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/kbd.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/partition.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/pit.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/rtc.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/serial.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/shutdown.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/speaker.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/timer.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../devices/vga.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../filesys/cache.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../filesys/directory.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../filesys/file.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../filesys/filesys.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../filesys/free-map.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../filesys/fsutil.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../filesys/inode.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/arithmetic.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../lib/debug.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../lib/kernel/bitmap.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/kernel/console.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/kernel/debug.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/kernel/hash.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/kernel/list.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/random.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../lib/stdio.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../lib/stdlib.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../lib/string.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../lib/user/console.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/user/debug.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/user/entry.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/user/syscall.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../lib/ustar.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="../tests/lib.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/main.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/args-dbl-space.ck"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../tests/userprog/args-many.ck" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../tests/userprog/args-multiple.ck" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../tests/userprog/args-none.ck" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../tests/userprog/args-single.ck" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../tests/userprog/args.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/child-bad.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/child-close.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/child-rox.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/child-simple.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/close-normal.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/create-empty.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/create-exists.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/create-long.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/create-normal.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/exec-multiple.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/exec-once.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/open-missing.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/open-normal.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/open-twice.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/read-normal.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/read-zero.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/wait-simple.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/wait-twice.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/write-normal.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../tests/userprog/write-zero.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/condvar.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/init.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/interrupt.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/lock.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/malloc.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/palloc.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/semaphore.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="../threads/thread.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="exception.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <folder path="0">
+        <cTool>
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="src/devices">
+        <cTool>
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="src/filesys">
+        <cTool>
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="src/lib/kernel">
+        <cTool>
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <folder path="src/lib/user">
+        <cTool>
+          <incDir>
+            <pElem>../lib/user</pElem>
+            <pElem>build</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="src/tests">
+        <cTool>
+          <incDir>
+            <pElem>../lib/user</pElem>
+            <pElem>build</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="src/threads">
+        <cTool>
+          <incDir>
+            <pElem>../lib/kernel</pElem>
+            <pElem>build</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>FILESYS</Elem>
+            <Elem>USERPROG</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <item path="gdt.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="pagedir.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="process.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="syscall.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="tss.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="umem.c" ex="false" tool="0" flavor2="0">
+        <cTool flags="0">
+        </cTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
