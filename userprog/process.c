@@ -55,12 +55,13 @@
 #include "userprog/syscall.h"
 #include "userprog/process.h"
 #include "devices/timer.h"
+#include "threads/semaphore.h"
 
 // *****************************************************************
 // CMPS111 Lab 3 : Remove the comment on this literal when you are 
 // ready to start testing command line arguments
 // *****************************************************************
-//#define COMMAND_ARGUMENTS
+// #define COMMAND_ARGUMENTS
 
 static thread_func start_process NO_RETURN;
 static bool load(const char *cmdline, void (**eip) (void), void **esp);
@@ -73,10 +74,62 @@ static bool load(const char *cmdline, void (**eip) (void), void **esp);
 static void
 push_command(const char *cmdline UNUSED, void **esp)
 {
-    printf("Base Address: 0x%08x\n", *esp);
+    // printf("Base Address: 0x%08x\n", *esp);
+
+    uint32_t argc = 0;
+    const char **argv = (const char**) palloc_get_page(0);
+
+    // Parse commandline and divide up the string into arguments
+    // Finds number of arguments (argc) and makes array of arguments (argv)
+    char* pointer;
+    char* argument = strtok_r(cmdline, " ", &pointer);
+    for(; argument != NULL; argument = strtok_r(NULL, " ", &pointer)){
+// printf("%s\n", argument);
+        argv[argc] = argument;
+// printf('%s\n', *((void**)*esp));
+        argc++;
+    }
+
+    void* arg_addr[argc];
+
+    // Add the commandline to the stack starting from rightmost argument
+    for(int i = argc - 1; i >= 0; i--){
+// printf("%s\n", argv[i]);
+        int arg_len = strlen(argv[i])+1;
+        *esp -= arg_len;
+        memcpy(*esp, argv[i], arg_len);
+// printf("%s\n", *((char**)*esp));
+        arg_addr[i] = *esp;
+    }
 
     // Word align with the stack pointer. DO NOT REMOVE THIS LINE.
     *esp = (void*) ((unsigned int) (*esp) & 0xfffffffc);
+
+    // Add the terminating NULL to the stack
+    *esp -= 4;
+    *((uint32_t*) *esp) = 0;
+// printf("%d\n", *((uint32_t*)*esp));
+
+    // Add the addresses of the arguments on the stack to the stack
+    for(int j = argc - 1; j > -1; j--){
+        *esp -= 4;
+        *((void**)*esp) = arg_addr[j];
+// printf("%d\n", *((void**)*esp));
+    }
+
+    // Adds the address of the beginning of argv to the stack
+    *esp -= 4;
+    *((void**)*esp) = (*esp + 4);
+
+    // Adds argc to the stack
+    *esp -= 4;
+    *((uint32_t*)*esp) = argc;
+
+    // Adds a fake return address to the stack
+    *esp -= 4;
+    *((uint32_t*)*esp) = 0;
+
+    palloc_free_page(argv);
 
     // Some of you CMPS111 Lab 3 code will go here.
     //
@@ -125,10 +178,24 @@ process_execute(const char *cmdline)
     
     strlcpy(cmdline_copy, cmdline, PGSIZE);
 
-    // Create a Kernel Thread for the new process
-    tid = thread_create(cmdline, PRI_DEFAULT, start_process, cmdline_copy);
+    // Added
+    struct process_block *init_block = palloc_get_page(0);
+    init_block->pid = -1;
+    init_block->cmdline = cmdline_copy;
+    init_block->finished = false;
+    semaphore_init(&init_block->init_child, 0);
+    semaphore_init(&init_block->waiter, 0);
+    //End Added
 
-    timer_msleep(10);
+    // Create a Kernel Thread for the new process
+    // tid = thread_create(cmdline, PRI_DEFAULT, start_process, cmdline_copy);
+    tid = thread_create(cmdline, PRI_DEFAULT, start_process, init_block);
+
+    //Added
+    semaphore_down(&init_block->init_child);
+    list_push_back(&(thread_current()->children_list), &(init_block->elem));
+    //End Added
+    // timer_msleep(10);
 
     return tid;
 }
@@ -143,21 +210,27 @@ start_process(void *cmdline)
 {
     bool success = false;
 
+    //Added
+    struct process_block *init_block = cmdline;
+// printf("cmdline: %s\n", init_block->cmdline);
     // Initialize interrupt frame and load executable. 
     struct intr_frame pif;
     memset(&pif, 0, sizeof pif);
     pif.gs = pif.fs = pif.es = pif.ds = pif.ss = SEL_UDSEG;
     pif.cs = SEL_UCSEG;
     pif.eflags = FLAG_IF | FLAG_MBS;
-    success = load(cmdline, &pif.eip, &pif.esp);
+    success = load((char*)init_block->cmdline, &pif.eip, &pif.esp);
     if (success) {
-        push_command(cmdline, &pif.esp);
+        push_command(init_block->cmdline, &pif.esp);
     }
-    palloc_free_page(cmdline);
+    // palloc_free_page(&init_block->cmdline);
 
     if (!success) {
         thread_exit();
     }
+    init_block->pid = thread_current()->tid;
+    thread_current()->problock = init_block;
+    semaphore_up(&init_block->init_child);
 
     // Start the user process by simulating a return from an
     // interrupt, implemented by intr_exit (in threads/intr-stubs.S).  
@@ -180,7 +253,25 @@ start_process(void *cmdline)
 int
 process_wait(tid_t child_tid UNUSED)
 {
-    return -1;
+    struct process_block *child_block = NULL;
+    struct list_elem *curr = NULL;
+    struct list *child_list = &(thread_current()->children_list);
+    if(!list_empty(child_list)){
+        for(curr = list_front(child_list); curr != list_end(child_list); curr = list_next(curr)){
+            struct process_block *problock = list_entry(curr, struct process_block, elem);
+            if(problock->pid == child_tid){
+                child_block = problock;
+                break;
+            }
+        }
+    }
+    if(child_block == NULL)
+        return -1;
+
+    if(child_block->finished == false){
+        semaphore_down(&(child_block->waiter));
+        list_remove(curr);
+    }
 }
 
 /* Free the current process's resources. */
@@ -190,6 +281,10 @@ process_exit(void)
     struct thread *cur = thread_current();
     uint32_t *pd;
 
+    //Added
+    cur->problock->finished = true;
+    semaphore_up(&cur->problock->waiter);
+    //End Added
     /* Destroy the current process's page directory and switch back
        to the kernel-only page directory. */
     pd = cur->pagedir;
@@ -535,7 +630,7 @@ setup_stack(void **esp)
     bool success = false;
 
     // upage address is the first segment of stack.
-    kpage = vm_frame_allocate(PAL_USER | PAL_ZERO, PHYS_BASE - PGSIZE);
+    kpage = vm_frame_allocate(PAL_USER | PAL_ZERO, PHYS_BASE - PGSIZE); 
     if (kpage != NULL) {
         success = install_page(((uint8_t *) PHYS_BASE) - PGSIZE, kpage, true);
         if (success)

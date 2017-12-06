@@ -1,0 +1,35 @@
+Copying tests/userprog/read-normal to scratch partition...
+Copying ../../tests/userprog/sample.txt to scratch partition...
+qemu-system-i386 -device isa-debug-exit -hda /tmp/OWrxg4VnwX.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading............
+Kernel command line: -q -f extract run read-normal
+Pintos booting with 3,968 kB RAM...
+367 pages available in kernel pool.
+367 pages available in user pool.
+Calibrating timer...  18,201,600 loops/s.
+hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 193 sectors (96 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 97 sectors (48 kB), Pintos scratch (22)
+filesys: using hda2
+scratch: using hda3
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'read-normal' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'read-normal':
+(read-normal) begin
+(read-normal) open "sample.txt" for verification
+[ERROR] system call 6 is unimplemented!
+Execution of 'read-normal' complete.
+Timer: 164 ticks
+Thread: 34 idle ticks, 115 kernel ticks, 16 user ticks
+hda2 (filesys): 220 reads, 193 writes
+hda3 (scratch): 96 reads, 2 writes
+Console: 996 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...

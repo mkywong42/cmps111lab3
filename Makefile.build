@@ -63,6 +63,7 @@ userprog_SRC += userprog/syscall.c	# System call handler.
 userprog_SRC += userprog/gdt.c		# GDT initialization.
 userprog_SRC += userprog/tss.c		# TSS management.
 userprog_SRC += userprog/umem.c		# User memory.
+userprog_SRC += userprog/lab3.c		# Added
 
 # Virtual memory code.
 vm_SRC  = vm/frame.c			# Frame tables.

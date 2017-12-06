@@ -7,4 +7,4 @@ userprog/syscall.o: ../../userprog/syscall.c ../../lib/stdio.h \
  ../../lib/inttypes.h ../../filesys/directory.h ../../threads/palloc.h \
  ../../threads/malloc.h ../../threads/interrupt.h ../../threads/thread.h \
  ../../threads/vaddr.h ../../threads/loader.h ../../userprog/syscall.h \
- ../../userprog/process.h ../../userprog/umem.h
+ ../../userprog/process.h ../../threads/semaphore.h ../../userprog/umem.h

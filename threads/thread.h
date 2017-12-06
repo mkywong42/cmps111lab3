@@ -142,6 +142,11 @@ struct thread
 
     // Owned by thread.c. 
     unsigned magic;        // Detects stack overflow. 
+
+    #ifdef USERPROG
+    struct list children_list;
+    struct process_block *problock;
+    #endif
   };
 
 // If false(default), use round-robin scheduler.
