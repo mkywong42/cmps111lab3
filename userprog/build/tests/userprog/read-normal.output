@@ -1,6 +1,69 @@
 Copying tests/userprog/read-normal to scratch partition...
 Copying ../../tests/userprog/sample.txt to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/PJaFenSN_N.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/pf1VHaz3bM.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading............
+Kernel command line: -q -f extract run read-normal
+Pintos booting with 3,968 kB RAM...
+367 pages available in kernel pool.
+367 pages available in user pool.
+Calibrating timer...  4,883,200 loops/s.
+hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 194 sectors (97 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 97 sectors (48 kB), Pintos scratch (22)
+filesys: using hda2
+scratch: using hda3
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'read-normal' into the file system...
+Kernel PANIC at ../../filesys/fsutil.c:125 in fsutil_extract(): read-normal: open failed
+Call stack: 0xc002781a 0xc0038268 0xc01050cc 0xc010508c 0xc010504c.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../devices/timer.c:227 in real_time_sleep().
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=ccccccd0 error=00000000
+ eax=ffffffff ebx=c010704c ecx=cccccccc edx=c010704c
+ esi=c0039900 edi=c0107000 esp=c0039918 ebp=c0039918
+ cs=0008 ds=0010 es=0010 ss=9900
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=cccccce0 error=00000000
+ eax=ffffffff ebx=c010704c ecx=00000780 edx=cccccccc
+ esi=0000006d edi=c002e32c esp=c000eb50 ebp=c000ebc0
+ cs=0008 ds=0010 es=0010 ss=8428
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=ccccccd8 error=00000000
+ eax=ffffffff ebx=c010704c ecx=00000780 edx=000003f8
+ esi=cccccccc edi=c002e32c esp=00000082 ebp=c000ea64
+ cs=0008 ds=0010 es=0010 ss=0092
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=ccccccd8 error=00000000
+ eax=ffffffff ebx=c010704c ecx=00000780 edx=000003f8
+ esi=cccccccc edi=c002e32c esp=00000097 ebp=c000e918
+ cs=0008 ds=0010 es=0010 ss=140f
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=ccccccd8 error=00000000
+ eax=ffffffff ebx=c010704c ecx=00000780 edx=000003f8
+ esi=cccccccc edi=c002e32c esp=00000097 ebp=c000e7cc
+ cs=0008 ds=0010 es=0010 ss=140f
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=ccccccd8 error=00000000
+ eax=ffffffff ebx=c010704c ecx=00000780 edx=000003f8
+ esi=cccccccc edi=c002e32c esp=c0038428 ebp=c000e680
+ cs=0008 ds=0010 es=0010 ss=140f
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=ccccccd8 error=00000000
+ eax=ffffffff ebx=c010704c ecx=00000780 edx=000003f8
+ esi=cccccccc edi=c002e32c esp=00000097 ebp=c000e534
+ cs=0008 ds=0010 es=0010 ss=140f
+Interrupt 0x03 (#BP Breakpoint Exception) at eip=0xc010704d
+ cr2=ccccccd8 error=00000000
+ eax=ffffffff ebx=c010704c ecx=00000780 edx=000003f8
+ esi=cccccccc edi=c002e32c esp=00000097 ebp=c000e3e8
+ cs=0008 ds=0010 es=0010 ss=140f
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run read-normal
@@ -23,10 +86,10 @@ Erasing ustar archive...
 Executing 'read-normal':
 (read-normal) begin
 (read-normal) open "sample.txt" for verification
-[ERROR] system call 6 is unimplemented!
+[ERROR] system call 7 is unimplemented!
 Execution of 'read-normal' complete.
-Timer: 189 ticks
-Thread: 31 idle ticks, 149 kernel ticks, 11 user ticks
+Timer: 221 ticks
+Thread: 31 idle ticks, 175 kernel ticks, 17 user ticks
 hda2 (filesys): 220 reads, 193 writes
 hda3 (scratch): 96 reads, 2 writes
 Console: 995 characters output

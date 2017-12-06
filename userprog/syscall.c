@@ -48,6 +48,7 @@
 #include "userprog/syscall.h"
 #include "userprog/process.h"
 #include "userprog/umem.h"
+#include "threads/lock.h"
 
 static void syscall_handler(struct intr_frame *);
 
@@ -56,11 +57,16 @@ static void exit_handler(struct intr_frame *);
 
 // Added
 static void create_handler(struct intr_frame *);
+static void open_handler(struct intr_frame *);
+static void read_handler(struct intr_frame *);
+
+struct lock sys_lock;
 //End added
 
 void
 syscall_init (void)
 {
+  lock_init(&sys_lock);
   intr_register_int (0x30, 3, INTR_ON, syscall_handler, "syscall");
 }
 
@@ -93,6 +99,14 @@ syscall_handler(struct intr_frame *f)
   //Added
   case SYS_CREATE:
     create_handler(f);
+    break;
+
+  case SYS_OPEN:
+    open_handler(f);
+    break;
+
+  case SYS_READ:
+    read_handler(f);
     break;
   //End Added
 
@@ -152,14 +166,16 @@ static void write_handler(struct intr_frame *f)
     umem_read(f->esp + 4, &fd, sizeof(fd));
     umem_read(f->esp + 8, &buffer, sizeof(buffer));
     umem_read(f->esp + 12, &size, sizeof(size));
-
+    
     f->eax = sys_write(fd, buffer, size);
 }
 
 //Added
 
 bool sys_create(char* filename, int size){
+    lock_acquire(&sys_lock);
     bool status = filesys_create(filename, size, false);
+    lock_release(&sys_lock);
     return status;
 }
 
@@ -175,5 +191,44 @@ static void create_handler(struct intr_frame *f)
     f->eax = status;
 }
 
+int sys_open(char* filename){
+    struct file_info *fi = palloc_get_page(0);
+    lock_acquire(&sys_lock);
+    struct file *open_file = filesys_open(filename);
+    if(open_file == NULL){
+// printf("returning null");
+        return -1;
+    }
+    fi->filename = open_file;
+    fi->id = thread_current()->open_file_count + 3;
+    thread_current()->open_file_count++;
+    list_push_back(&thread_current()->file_list, &fi->elem);
+    lock_release(&sys_lock);
 
+    return fi->id;
+}
+static void open_handler(struct intr_frame *f)
+{
+    char* file;
+
+    umem_read(f->esp + 4, &file, sizeof(file));
+
+    int status = sys_open(file);
+    f->eax = status;
+}
+
+static void read_handler(struct intr_frame *f)
+{
+    char* file;
+    void* buffer;
+    int size;
+
+    umem_read(f->esp + 4, &file, sizeof(file));
+    umem_read(f->esp + 8, &buffer, sizeof(buffer)):
+    umem_read(f->esp + 12, &size, sizeof(size));
+
+    int status = sys_read(file, buffer, size);
+    f->eax = status;
+
+}
 //End Added

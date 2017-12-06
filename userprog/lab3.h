@@ -13,6 +13,12 @@ struct process_block {
     bool finished;
 };
 
+struct file_info {
+    int id;
+    struct list_elem elem;
+    struct file *filename;
+};
+
 void
 push_command(const char *cmdline UNUSED, void **esp);
 

@@ -1,13 +1,13 @@
 Copying tests/userprog/read-zero to scratch partition...
 Copying ../../tests/userprog/sample.txt to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/ehZR6Oxdiw.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/xcEj3NuGxs.dsk -m 4 -net none -nographic -monitor null
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run read-zero
 Pintos booting with 3,968 kB RAM...
 367 pages available in kernel pool.
 367 pages available in user pool.
-Calibrating timer...  11,737,600 loops/s.
+Calibrating timer...  12,966,400 loops/s.
 hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
 hda1: 194 sectors (97 kB), Pintos OS kernel (20)
 hda2: 4,096 sectors (2 MB), Pintos file system (21)
@@ -23,10 +23,10 @@ Erasing ustar archive...
 Executing 'read-zero':
 (read-zero) begin
 (read-zero) open "sample.txt"
-[ERROR] system call 6 is unimplemented!
+[ERROR] system call 8 is unimplemented!
 Execution of 'read-zero' complete.
-Timer: 321 ticks
-Thread: 35 idle ticks, 241 kernel ticks, 47 user ticks
+Timer: 278 ticks
+Thread: 34 idle ticks, 234 kernel ticks, 15 user ticks
 hda2 (filesys): 220 reads, 193 writes
 hda3 (scratch): 96 reads, 2 writes
 Console: 967 characters output

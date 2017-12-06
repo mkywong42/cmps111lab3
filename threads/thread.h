@@ -146,6 +146,8 @@ struct thread
     #ifdef USERPROG
     struct list children_list;
     struct process_block *problock;
+    struct list file_list;
+    int open_file_count;
     #endif
   };
 
