@@ -5,4 +5,4 @@ threads/thread.o: ../../threads/thread.c ../../threads/thread.h \
  ../../lib/string.h ../../threads/flags.h ../../threads/interrupt.h \
  ../../threads/intr-stubs.h ../../threads/palloc.h ../../threads/switch.h \
  ../../threads/lock.h ../../threads/semaphore.h ../../threads/vaddr.h \
- ../../threads/loader.h ../../userprog/process.h
+ ../../threads/loader.h ../../userprog/process.h ../../userprog/lab3.h
