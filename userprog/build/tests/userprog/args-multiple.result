@@ -1,9 +1,26 @@
 FAIL
-Kernel panic in run: PANIC at ../../filesys/fsutil.c:125 in fsutil_extract(): args-multiple: open failed
-Call stack: 0xc0027808 0xc0037ff8 0xc01050cc 0xc010508c 0xc010504c
-Translation of call stack:
-0xc0027808: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0037ff8: intrff_stub (threads/intr-stubs.S:?)
-0xc01050cc: (unknown)
-0xc010508c: (unknown)
-0xc010504c: (unknown)
+Test output failed to match any acceptable form.
+
+Acceptable output:
+  (args) begin
+  (args) argc = 5
+  (args) argv[0] = 'args-multiple'
+  (args) argv[1] = 'some'
+  (args) argv[2] = 'arguments'
+  (args) argv[3] = 'for'
+  (args) argv[4] = 'you!'
+  (args) argv[5] = null
+  (args) end
+  args-multiple: exit(0)
+Differences in `diff -u' format:
+- (args) begin
+- (args) argc = 5
+- (args) argv[0] = 'args-multiple'
+- (args) argv[1] = 'some'
+- (args) argv[2] = 'arguments'
+- (args) argv[3] = 'for'
+- (args) argv[4] = 'you!'
+- (args) argv[5] = null
+- (args) end
+- args-multiple: exit(0)
++ Command line arguments not implemented, exiting...

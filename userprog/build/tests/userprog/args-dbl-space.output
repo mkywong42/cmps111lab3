@@ -1,14 +1,14 @@
 Copying tests/userprog/args-dbl-space to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/P62K8xEHj1.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/6cJgmsH3Zr.dsk -m 4 -net none -nographic -monitor null
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run 'args-dbl-space two  spaces!'
 Pintos booting with 3,968 kB RAM...
 367 pages available in kernel pool.
 367 pages available in user pool.
-Calibrating timer...  26,163,200 loops/s.
+Calibrating timer...  3,273,600 loops/s.
 hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
-hda1: 193 sectors (96 kB), Pintos OS kernel (20)
+hda1: 194 sectors (97 kB), Pintos OS kernel (20)
 hda2: 4,096 sectors (2 MB), Pintos file system (21)
 hda3: 94 sectors (47 kB), Pintos scratch (22)
 filesys: using hda2
@@ -19,6 +19,13 @@ Extracting ustar archive from scratch device into file system...
 Putting 'args-dbl-space' into the file system...
 Erasing ustar archive...
 Executing 'args-dbl-space two  spaces!':
-load: 'args-dbl-space two  spaces!': open failed, no such file
-
-TIMEOUT after 60 seconds of host CPU time
+Command line arguments not implemented, exiting...
+Execution of 'args-dbl-space two  spaces!' complete.
+Timer: 205 ticks
+Thread: 32 idle ticks, 173 kernel ticks, 0 user ticks
+hda2 (filesys): 188 reads, 187 writes
+hda3 (scratch): 93 reads, 2 writes
+Console: 944 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...

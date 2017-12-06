@@ -1,14 +1,14 @@
 Copying tests/userprog/create-long to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/tpid0gL3Vc.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/Jh1KC32FM3.dsk -m 4 -net none -nographic -monitor null
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run create-long
 Pintos booting with 3,968 kB RAM...
 367 pages available in kernel pool.
 367 pages available in user pool.
-Calibrating timer...  15,539,200 loops/s.
+Calibrating timer...  11,456,000 loops/s.
 hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
-hda1: 193 sectors (96 kB), Pintos OS kernel (20)
+hda1: 194 sectors (97 kB), Pintos OS kernel (20)
 hda2: 4,096 sectors (2 MB), Pintos file system (21)
 hda3: 95 sectors (47 kB), Pintos scratch (22)
 filesys: using hda2
@@ -20,13 +20,15 @@ Putting 'create-long' into the file system...
 Erasing ustar archive...
 Executing 'create-long':
 (create-long) begin
-[ERROR] system call 4 is unimplemented!
+(create-long) create("x..."): 0
+(create-long) end
+create-long: exit(0)
 Execution of 'create-long' complete.
-Timer: 128 ticks
-Thread: 30 idle ticks, 91 kernel ticks, 8 user ticks
-hda2 (filesys): 216 reads, 189 writes
+Timer: 110 ticks
+Thread: 30 idle ticks, 75 kernel ticks, 7 user ticks
+hda2 (filesys): 218 reads, 191 writes
 hda3 (scratch): 94 reads, 2 writes
-Console: 900 characters output
+Console: 931 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

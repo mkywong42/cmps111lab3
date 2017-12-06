@@ -1,14 +1,14 @@
 Copying tests/userprog/open-missing to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/PHgtBKRNmS.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/63PxbsPF0J.dsk -m 4 -net none -nographic -monitor null
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run open-missing
 Pintos booting with 3,968 kB RAM...
 367 pages available in kernel pool.
 367 pages available in user pool.
-Calibrating timer...  34,048,000 loops/s.
+Calibrating timer...  157,696,000 loops/s.
 hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
-hda1: 193 sectors (96 kB), Pintos OS kernel (20)
+hda1: 194 sectors (97 kB), Pintos OS kernel (20)
 hda2: 4,096 sectors (2 MB), Pintos file system (21)
 hda3: 95 sectors (47 kB), Pintos scratch (22)
 filesys: using hda2
@@ -22,11 +22,11 @@ Executing 'open-missing':
 (open-missing) begin
 [ERROR] system call 6 is unimplemented!
 Execution of 'open-missing' complete.
-Timer: 173 ticks
-Thread: 30 idle ticks, 136 kernel ticks, 7 user ticks
+Timer: 99 ticks
+Thread: 30 idle ticks, 66 kernel ticks, 3 user ticks
 hda2 (filesys): 216 reads, 189 writes
 hda3 (scratch): 94 reads, 2 writes
-Console: 906 characters output
+Console: 905 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

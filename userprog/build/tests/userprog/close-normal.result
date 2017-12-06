@@ -1,9 +1,16 @@
 FAIL
-Kernel panic in run: PANIC at ../../filesys/fsutil.c:125 in fsutil_extract(): close-normal: open failed
-Call stack: 0xc0027808 0xc0037ff8 0xc01050cc 0xc010508c 0xc010504c
-Translation of call stack:
-0xc0027808: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0037ff8: intrff_stub (threads/intr-stubs.S:?)
-0xc01050cc: (unknown)
-0xc010508c: (unknown)
-0xc010504c: (unknown)
+Test output failed to match any acceptable form.
+
+Acceptable output:
+  (close-normal) begin
+  (close-normal) open "sample.txt"
+  (close-normal) close "sample.txt"
+  (close-normal) end
+  close-normal: exit(0)
+Differences in `diff -u' format:
+  (close-normal) begin
+  (close-normal) open "sample.txt"
+- (close-normal) close "sample.txt"
+- (close-normal) end
+- close-normal: exit(0)
++ [ERROR] system call 6 is unimplemented!

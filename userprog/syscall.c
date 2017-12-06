@@ -54,6 +54,10 @@ static void syscall_handler(struct intr_frame *);
 static void write_handler(struct intr_frame *);
 static void exit_handler(struct intr_frame *);
 
+// Added
+static void create_handler(struct intr_frame *);
+//End added
+
 void
 syscall_init (void)
 {
@@ -85,6 +89,12 @@ syscall_handler(struct intr_frame *f)
   case SYS_WRITE: 
     write_handler(f);
     break;
+  
+  //Added
+  case SYS_CREATE:
+    create_handler(f);
+    break;
+  //End Added
 
   default:
     printf("[ERROR] system call %d is unimplemented!\n", syscall);
@@ -146,3 +156,24 @@ static void write_handler(struct intr_frame *f)
     f->eax = sys_write(fd, buffer, size);
 }
 
+//Added
+
+bool sys_create(char* filename, int size){
+    bool status = filesys_create(filename, size, false);
+    return status;
+}
+
+static void create_handler(struct intr_frame *f)
+{
+    char* file;
+    int size;
+
+    umem_read(f->esp + 4, &file, sizeof(file));
+    umem_read(f->esp + 8, &size, sizeof(size));
+
+    bool status = sys_create(file, size);
+    f->eax = status;
+}
+
+
+//End Added
