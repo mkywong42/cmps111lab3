@@ -62,7 +62,7 @@
 // ready to start testing command line arguments
 // *****************************************************************
 // #define COMMAND_ARGUMENTS
-bool load(const char *cmdline, void (**eip) (void), void **esp);
+// bool load(const char *cmdline, void (**eip) (void), void **esp);
 
 /* Sets up the CPU for running user code in the current
    thread.

@@ -11,6 +11,7 @@ struct process_block {
     struct semaphore waiter;
     struct list_elem elem;
     bool finished;
+    int exit_code;
 };
 
 struct file_info {

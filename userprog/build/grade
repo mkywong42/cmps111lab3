@@ -1,4 +1,4 @@
-TOTAL TESTING SCORE: 47.5%
+TOTAL TESTING SCORE: 70.0%
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -8,9 +8,9 @@ Test Set                                      Pts Max  % Ttl  % Max
 --------------------------------------------- --- --- ------ ------
 tests/userprog/Rubric.process                   1/  1  30.0%/ 30.0%
 tests/userprog/Rubric.arguments                 0/  4   0.0%/ 10.0%
-tests/userprog/Rubric.systemcalls               7/ 16  17.5%/ 40.0%
+tests/userprog/Rubric.systemcalls              16/ 16  40.0%/ 40.0%
 --------------------------------------------- --- --- ------ ------
-Total                                                  47.5%/ 80.0%
+Total                                                  70.0%/ 80.0%
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -49,25 +49,25 @@ System Calls (tests/userprog/Rubric.systemcalls):
 	     1/ 1 tests/userprog/open-twice
 
 	- "read" system call.
-	  ** 0/ 1 tests/userprog/read-normal
-	  ** 0/ 1 tests/userprog/read-zero
+	     1/ 1 tests/userprog/read-normal
+	     1/ 1 tests/userprog/read-zero
 
 	- "write" system call.
-	  ** 0/ 1 tests/userprog/write-normal
-	  ** 0/ 1 tests/userprog/write-zero
+	     1/ 1 tests/userprog/write-normal
+	     1/ 1 tests/userprog/write-zero
 
 	- "close" system call.
-	  ** 0/ 1 tests/userprog/close-normal
+	     1/ 1 tests/userprog/close-normal
 
 	- "exec" system call.
-	  ** 0/ 1 tests/userprog/exec-once
-	  ** 0/ 1 tests/userprog/exec-multiple
+	     1/ 1 tests/userprog/exec-once
+	     1/ 1 tests/userprog/exec-multiple
 
 	- "wait" system call.
-	  ** 0/ 1 tests/userprog/wait-simple
-	  ** 0/ 1 tests/userprog/wait-twice
+	     1/ 1 tests/userprog/wait-simple
+	     1/ 1 tests/userprog/wait-twice
 
 	- Section summary.
-	      7/ 16 tests passed
-	      7/ 16 points subtotal
+	     16/ 16 tests passed
+	     16/ 16 points subtotal
 

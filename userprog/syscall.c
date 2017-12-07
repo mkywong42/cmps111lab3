@@ -59,6 +59,10 @@ static void exit_handler(struct intr_frame *);
 static void create_handler(struct intr_frame *);
 static void open_handler(struct intr_frame *);
 static void read_handler(struct intr_frame *);
+static void filesize_handler(struct intr_frame *);
+static void close_handler(struct intr_frame *);
+static void wait_handler(struct intr_frame *);
+static void exec_handler(struct intr_frame *);
 
 struct lock sys_lock;
 //End added
@@ -108,6 +112,22 @@ syscall_handler(struct intr_frame *f)
   case SYS_READ:
     read_handler(f);
     break;
+
+  case SYS_FILESIZE:
+    filesize_handler(f);
+    break;
+
+  case SYS_CLOSE:
+    close_handler(f);
+    break;
+
+  case SYS_WAIT:
+    wait_handler(f);
+    break;
+
+  case SYS_EXEC:
+    exec_handler(f);
+    break;
   //End Added
 
   default:
@@ -128,6 +148,7 @@ syscall_handler(struct intr_frame *f)
 void sys_exit(int status) 
 {
   printf("%s: exit(%d)\n", thread_current()->name, status);
+  thread_current()->problock->exit_code = status;
   thread_exit();
 }
 
@@ -139,6 +160,9 @@ static void exit_handler(struct intr_frame *f)
   sys_exit(exitcode);
 }
 
+// Added
+
+
 /*
  * BUFFER+0 and BUFFER+size should be valid user adresses
  */
@@ -149,13 +173,36 @@ static uint32_t sys_write(int fd, const void *buffer, unsigned size)
 
   int ret = -1;
 
+  lock_acquire(&sys_lock);
   if (fd == 1) { // write to stdout
     putbuf(buffer, size);
     ret = size;
   }
 
+  struct file_info *fi = NULL;
+  if(!list_empty(&thread_current()->file_list)){
+      for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+          struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+          if(curr_info->id == fd){
+              fi = curr_info;
+              break;
+          }
+      }
+      if(fi == NULL){
+          lock_release(&sys_lock);
+          return -1;
+      } 
+  }else{
+      lock_release(&sys_lock);
+      return -1;
+  }
+
+  ret = file_write(fi->filename, buffer, size);
+  lock_release(&sys_lock);
+
   return (uint32_t) ret;
-}
+} 
 
 static void write_handler(struct intr_frame *f)
 {
@@ -169,8 +216,6 @@ static void write_handler(struct intr_frame *f)
     
     f->eax = sys_write(fd, buffer, size);
 }
-
-//Added
 
 bool sys_create(char* filename, int size){
     lock_acquire(&sys_lock);
@@ -197,6 +242,7 @@ int sys_open(char* filename){
     struct file *open_file = filesys_open(filename);
     if(open_file == NULL){
 // printf("returning null");
+        lock_release(&sys_lock);
         return -1;
     }
     fi->filename = open_file;
@@ -217,18 +263,147 @@ static void open_handler(struct intr_frame *f)
     f->eax = status;
 }
 
+int sys_read(int file_num, void* buffer, int size){
+    lock_acquire(&sys_lock);
+    struct file_info *fi = NULL;
+    if(!list_empty(&thread_current()->file_list)){
+        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+              if(curr_info->id == file_num){
+                  fi = curr_info;
+                  break;
+              }
+          }
+          if(fi == NULL){
+            lock_release(&sys_lock);
+            return -1;
+          } 
+    }else{
+      lock_release(&sys_lock);
+      return -1;
+    }
+
+    int status = file_read(fi->filename, buffer, size);
+    lock_release(&sys_lock);
+    return status;
+}
+
 static void read_handler(struct intr_frame *f)
 {
-    char* file;
+    int file_number;
     void* buffer;
     int size;
 
-    umem_read(f->esp + 4, &file, sizeof(file));
-    umem_read(f->esp + 8, &buffer, sizeof(buffer)):
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+    umem_read(f->esp + 8, &buffer, sizeof(buffer));
     umem_read(f->esp + 12, &size, sizeof(size));
 
-    int status = sys_read(file, buffer, size);
+    int status = sys_read(file_number, buffer, size);
     f->eax = status;
+}
 
+int sys_filesize(int file_number){
+    lock_acquire(&sys_lock);
+    struct file_info *fi = NULL;
+    if(!list_empty(&thread_current()->file_list)){
+        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+              if(curr_info->id == file_number){
+                  fi = curr_info;
+                  break;
+              }
+          }
+          if(fi == NULL) {
+            lock_release(&sys_lock);
+            return -1;
+          }
+    }else{
+      lock_release(&sys_lock);
+      return -1;
+    }
+
+    int status = file_length(fi->filename);
+    lock_release(&sys_lock);
+    return status;
+}
+
+static void filesize_handler(struct intr_frame *f)
+{
+    int file_number;
+
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+
+    int status = sys_filesize(file_number);
+    f->eax = status;
+}
+
+void sys_close(int file_number){
+    lock_acquire(&sys_lock);
+    struct file_info *fi = NULL;
+    if(!list_empty(&thread_current()->file_list)){
+        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+              if(curr_info->id == file_number){
+                  fi = curr_info;
+                  break;
+              }
+          }
+          if(fi == NULL){
+              lock_release(&sys_lock);
+              return;
+          }
+    }else{
+      lock_release(&sys_lock);
+      return;
+    }
+
+    file_close(fi->filename);
+    list_remove(&fi->elem);
+    lock_release(&sys_lock);
+
+}
+
+static void close_handler(struct intr_frame *f)
+{
+    int file_number;
+
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+
+    sys_close(file_number);
+}
+
+int sys_wait(int file_number){
+    int status = process_wait(file_number);
+    return status;
+}
+
+static void wait_handler(struct intr_frame *f)
+{
+    int file_number;
+    
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+
+    int status = sys_wait(file_number);
+    f->eax = status;
+}
+
+int sys_exec(void* command_line){
+    lock_acquire(&sys_lock);
+    int status = process_execute(command_line);
+    lock_release(&sys_lock);
+    return status;
+}
+
+static void exec_handler(struct intr_frame *f)
+{
+    void* command_line;
+    
+    umem_read(f->esp + 4, &command_line, sizeof(command_line));
+
+    int status = sys_exec(command_line);
+    f->eax = status;
 }
 //End Added

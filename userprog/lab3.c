@@ -146,6 +146,7 @@ process_execute(const char *cmdline)
     init_block->pid = -1;
     init_block->cmdline = cmdline_copy;
     init_block->finished = false;
+    init_block->exit_code = -1;
     semaphore_init(&init_block->init_child, 0);
     semaphore_init(&init_block->waiter, 0);
     //End Added
@@ -235,6 +236,8 @@ process_wait(tid_t child_tid UNUSED)
         semaphore_down(&(child_block->waiter));
         list_remove(curr);
     }
+
+    return child_block->exit_code;
 }
 
 /* Free the current process's resources. */
