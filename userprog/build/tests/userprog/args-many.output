@@ -1,12 +1,12 @@
 Copying tests/userprog/args-many to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/SB5gwgNcf6.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/atTuqiVSVt.dsk -m 4 -net none -nographic -monitor null
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run 'args-many a b c d e f g h i j k l m n o p q r s t u v'
 Pintos booting with 3,968 kB RAM...
 367 pages available in kernel pool.
 367 pages available in user pool.
-Calibrating timer...  181,862,400 loops/s.
+Calibrating timer...  45,414,400 loops/s.
 hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
 hda1: 204 sectors (102 kB), Pintos OS kernel (20)
 hda2: 4,096 sectors (2 MB), Pintos file system (21)
@@ -21,11 +21,11 @@ Erasing ustar archive...
 Executing 'args-many a b c d e f g h i j k l m n o p q r s t u v':
 Command line arguments not implemented, exiting...
 Execution of 'args-many a b c d e f g h i j k l m n o p q r s t u v' complete.
-Timer: 86 ticks
-Thread: 30 idle ticks, 56 kernel ticks, 0 user ticks
+Timer: 158 ticks
+Thread: 30 idle ticks, 130 kernel ticks, 0 user ticks
 hda2 (filesys): 188 reads, 187 writes
 hda3 (scratch): 93 reads, 2 writes
-Console: 1018 characters output
+Console: 1019 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

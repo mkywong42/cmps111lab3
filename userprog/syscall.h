@@ -34,6 +34,7 @@
 #define USERPROG_SYSCALL_H
 
 #include "userprog/process.h"
+#include "userprog/lab3.h"
 
 void syscall_init(void);
 void sys_exit(int);

@@ -1,12 +1,12 @@
 Copying tests/userprog/create-empty to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/p6zCQxI0Hu.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/a1Cz2P08AQ.dsk -m 4 -net none -nographic -monitor null
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run create-empty
 Pintos booting with 3,968 kB RAM...
 367 pages available in kernel pool.
 367 pages available in user pool.
-Calibrating timer...  71,065,600 loops/s.
+Calibrating timer...  25,369,600 loops/s.
 hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
 hda1: 204 sectors (102 kB), Pintos OS kernel (20)
 hda2: 4,096 sectors (2 MB), Pintos file system (21)
@@ -24,11 +24,11 @@ Executing 'create-empty':
 (create-empty) end
 create-empty: exit(0)
 Execution of 'create-empty' complete.
-Timer: 108 ticks
-Thread: 30 idle ticks, 74 kernel ticks, 5 user ticks
+Timer: 134 ticks
+Thread: 31 idle ticks, 94 kernel ticks, 10 user ticks
 hda2 (filesys): 218 reads, 191 writes
 hda3 (scratch): 94 reads, 2 writes
-Console: 936 characters output
+Console: 937 characters output
 Keyboard: 0 keys pressed
 Exception: 0 page faults
 Powering off...

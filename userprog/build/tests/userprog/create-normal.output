@@ -1,12 +1,12 @@
 Copying tests/userprog/create-normal to scratch partition...
-qemu-system-i386 -device isa-debug-exit -hda /tmp/3HbcT3hRbu.dsk -m 4 -net none -nographic -monitor null
+qemu-system-i386 -device isa-debug-exit -hda /tmp/2rWvk37Th_.dsk -m 4 -net none -nographic -monitor null
 PiLo hda1
 Loading............
 Kernel command line: -q -f extract run create-normal
 Pintos booting with 3,968 kB RAM...
 367 pages available in kernel pool.
 367 pages available in user pool.
-Calibrating timer...  3,273,600 loops/s.
+Calibrating timer...  34,355,200 loops/s.
 hda: 5,040 sectors (2 MB), model "QM00001", serial "QEMU HARDDISK"
 hda1: 204 sectors (102 kB), Pintos OS kernel (20)
 hda2: 4,096 sectors (2 MB), Pintos file system (21)
@@ -24,8 +24,8 @@ Executing 'create-normal':
 (create-normal) end
 create-normal: exit(0)
 Execution of 'create-normal' complete.
-Timer: 190 ticks
-Thread: 31 idle ticks, 142 kernel ticks, 18 user ticks
+Timer: 142 ticks
+Thread: 32 idle ticks, 106 kernel ticks, 5 user ticks
 hda2 (filesys): 218 reads, 192 writes
 hda3 (scratch): 94 reads, 2 writes
 Console: 947 characters output

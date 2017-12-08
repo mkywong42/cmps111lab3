@@ -8,4 +8,4 @@ userprog/syscall.o: ../../userprog/syscall.c ../../lib/stdio.h \
  ../../threads/malloc.h ../../threads/interrupt.h ../../threads/thread.h \
  ../../threads/vaddr.h ../../threads/loader.h ../../userprog/syscall.h \
  ../../userprog/process.h ../../userprog/lab3.h ../../threads/semaphore.h \
- ../../userprog/umem.h ../../threads/lock.h
+ ../../threads/lock.h ../../userprog/umem.h

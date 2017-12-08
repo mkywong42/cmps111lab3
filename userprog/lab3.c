@@ -26,6 +26,7 @@
 #include "userprog/syscall.h"
 #include "userprog/process.h"
 #include "devices/timer.h"
+#include "userprog/umem.h"
 
 static thread_func start_process NO_RETURN;
 
@@ -45,11 +46,10 @@ push_command(const char *cmdline UNUSED, void **esp)
     // Parse commandline and divide up the string into arguments
     // Finds number of arguments (argc) and makes array of arguments (argv)
     char* pointer;
-    char* argument = strtok_r(cmdline, " ", &pointer);
+    char* commandline = cmdline;
+    char* argument = strtok_r(commandline, " ", &pointer);
     for(; argument != NULL; argument = strtok_r(NULL, " ", &pointer)){
-// printf("%s\n", argument);
         argv[argc] = argument;
-// printf('%s\n', *((void**)*esp));
         argc++;
     }
 
@@ -57,11 +57,9 @@ push_command(const char *cmdline UNUSED, void **esp)
 
     // Add the commandline to the stack starting from rightmost argument
     for(int i = argc - 1; i >= 0; i--){
-// printf("%s\n", argv[i]);
         int arg_len = strlen(argv[i])+1;
         *esp -= arg_len;
         memcpy(*esp, argv[i], arg_len);
-// printf("%s\n", *((char**)*esp));
         arg_addr[i] = *esp;
     }
 
@@ -71,13 +69,11 @@ push_command(const char *cmdline UNUSED, void **esp)
     // Add the terminating NULL to the stack
     *esp -= 4;
     *((uint32_t*) *esp) = 0;
-// printf("%d\n", *((uint32_t*)*esp));
 
     // Add the addresses of the arguments on the stack to the stack
     for(int j = argc - 1; j > -1; j--){
         *esp -= 4;
         *((void**)*esp) = arg_addr[j];
-// printf("%d\n", *((void**)*esp));
     }
 
     // Adds the address of the beginning of argv to the stack
@@ -93,25 +89,6 @@ push_command(const char *cmdline UNUSED, void **esp)
     *((uint32_t*)*esp) = 0;
 
     palloc_free_page(argv);
-
-    // Some of you CMPS111 Lab 3 code will go here.
-    //
-    // One approach is to immediately call a function you've created in a
-    // new file to do well on the "is it well written" part of the assesment.
-    //
-    // An equally good alternative is to simply move this function to your own
-    // file, make it non-static, put it's declaration in a new header file and
-    // include that .h file in this .c file. 
-    //
-    // Something else to note: You'll be doing address arithmetic here and 
-    // that's one of only a handful of situations in which it is acceptable
-    // to have comments inside functions. 
-    //
-    // As you advance the stack pointer by adding fixed and variable offsets
-    // to it, add a SINGLE LINE comment to each logical block, a comment that 
-    // describes what you're doing, and why.
-    //
-    // If nothing else, it'll remind you what you did when it doesn't work :)
 }
 
 /* 
@@ -141,7 +118,6 @@ process_execute(const char *cmdline)
     
     strlcpy(cmdline_copy, cmdline, PGSIZE);
 
-    // Added
     struct process_block *init_block = palloc_get_page(0);
     init_block->pid = -1;
     init_block->cmdline = cmdline_copy;
@@ -149,16 +125,12 @@ process_execute(const char *cmdline)
     init_block->exit_code = -1;
     semaphore_init(&init_block->init_child, 0);
     semaphore_init(&init_block->waiter, 0);
-    //End Added
 
     // Create a Kernel Thread for the new process
-    // tid = thread_create(cmdline, PRI_DEFAULT, start_process, cmdline_copy);
     tid = thread_create(cmdline, PRI_DEFAULT, start_process, init_block);
 
-    //Added
     semaphore_down(&init_block->init_child);
     list_push_back(&(thread_current()->children_list), &(init_block->elem));
-    //End Added
     // timer_msleep(10);
 
     return tid;
@@ -174,9 +146,8 @@ start_process(void *cmdline)
 {
     bool success = false;
 
-    //Added
     struct process_block *init_block = cmdline;
-// printf("cmdline: %s\n", init_block->cmdline);
+
     // Initialize interrupt frame and load executable. 
     struct intr_frame pif;
     memset(&pif, 0, sizeof pif);
@@ -247,10 +218,8 @@ process_exit(void)
     struct thread *cur = thread_current();
     uint32_t *pd;
 
-    //Added
     cur->problock->finished = true;
     semaphore_up(&cur->problock->waiter);
-    //End Added
     
     /* Destroy the current process's page directory and switch back
        to the kernel-only page directory. */
@@ -267,4 +236,272 @@ process_exit(void)
         pagedir_activate(NULL);
         pagedir_destroy(pd);
     }
+}
+
+/****************** System Call Implementations ********************/
+
+// *****************************************************************
+// CMPS111 Lab 3 : Put your new system call implementatons in your 
+// own source file. Define them in your header file and include 
+// that .h in this .c file.
+// *****************************************************************
+
+void sys_exit(int status) 
+{
+  printf("%s: exit(%d)\n", thread_current()->name, status);
+  thread_current()->problock->exit_code = status;
+  thread_exit();
+}
+
+void exit_handler(struct intr_frame *f) 
+{
+  int exitcode;
+  umem_read(f->esp + 4, &exitcode, sizeof(exitcode));
+
+  sys_exit(exitcode);
+}
+
+/*
+ * BUFFER+0 and BUFFER+size should be valid user adresses
+ */
+static uint32_t sys_write(int fd, const void *buffer, unsigned size)
+{
+  umem_check((const uint8_t*) buffer);
+  umem_check((const uint8_t*) buffer + size - 1);
+
+  int ret = -1;
+
+  lock_acquire(&sys_lock);
+  if (fd == 1) { // write to stdout
+    putbuf(buffer, size);
+    ret = size;
+  }
+
+  struct file_info *fi = NULL;
+  if(!list_empty(&thread_current()->file_list)){
+      for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+          struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+          if(curr_info->id == fd){
+              fi = curr_info;
+              break;
+          }
+      }
+      if(fi == NULL){
+          lock_release(&sys_lock);
+          return -1;
+      } 
+  }else{
+      lock_release(&sys_lock);
+      return -1;
+  }
+
+  ret = file_write(fi->filename, buffer, size);
+  lock_release(&sys_lock);
+
+  return (uint32_t) ret;
+} 
+
+void write_handler(struct intr_frame *f)
+{
+    int fd;
+    const void *buffer;
+    unsigned size;
+
+    umem_read(f->esp + 4, &fd, sizeof(fd));
+    umem_read(f->esp + 8, &buffer, sizeof(buffer));
+    umem_read(f->esp + 12, &size, sizeof(size));
+    
+    f->eax = sys_write(fd, buffer, size);
+}
+
+static bool sys_create(char* filename, int size){
+    lock_acquire(&sys_lock);
+    bool status = filesys_create(filename, size, false);
+    lock_release(&sys_lock);
+    return status;
+}
+
+void create_handler(struct intr_frame *f)
+{
+    char* file;
+    int size;
+
+    umem_read(f->esp + 4, &file, sizeof(file));
+    umem_read(f->esp + 8, &size, sizeof(size));
+
+    bool status = sys_create(file, size);
+    f->eax = status;
+}
+
+static int sys_open(char* filename){
+    struct file_info *fi = palloc_get_page(0);
+    lock_acquire(&sys_lock);
+    struct file *open_file = filesys_open(filename);
+    if(open_file == NULL){
+        lock_release(&sys_lock);
+        return -1;
+    }
+    fi->filename = open_file;
+    fi->id = thread_current()->open_file_count + 3;
+    thread_current()->open_file_count++;
+    list_push_back(&thread_current()->file_list, &fi->elem);
+    lock_release(&sys_lock);
+
+    return fi->id;
+}
+
+void open_handler(struct intr_frame *f)
+{
+    char* file;
+
+    umem_read(f->esp + 4, &file, sizeof(file));
+
+    int status = sys_open(file);
+    f->eax = status;
+}
+
+static int sys_read(int file_num, void* buffer, int size){
+    lock_acquire(&sys_lock);
+    struct file_info *fi = NULL;
+    if(!list_empty(&thread_current()->file_list)){
+        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+              if(curr_info->id == file_num){
+                  fi = curr_info;
+                  break;
+              }
+          }
+          if(fi == NULL){
+            lock_release(&sys_lock);
+            return -1;
+          } 
+    }else{
+      lock_release(&sys_lock);
+      return -1;
+    }
+
+    int status = file_read(fi->filename, buffer, size);
+    lock_release(&sys_lock);
+    return status;
+}
+
+void read_handler(struct intr_frame *f)
+{
+    int file_number;
+    void* buffer;
+    int size;
+
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+    umem_read(f->esp + 8, &buffer, sizeof(buffer));
+    umem_read(f->esp + 12, &size, sizeof(size));
+
+    int status = sys_read(file_number, buffer, size);
+    f->eax = status;
+}
+
+static int sys_filesize(int file_number){
+    lock_acquire(&sys_lock);
+    struct file_info *fi = NULL;
+    if(!list_empty(&thread_current()->file_list)){
+        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+              if(curr_info->id == file_number){
+                  fi = curr_info;
+                  break;
+              }
+          }
+          if(fi == NULL) {
+            lock_release(&sys_lock);
+            return -1;
+          }
+    }else{
+      lock_release(&sys_lock);
+      return -1;
+    }
+
+    int status = file_length(fi->filename);
+    lock_release(&sys_lock);
+    return status;
+}
+
+void filesize_handler(struct intr_frame *f)
+{
+    int file_number;
+
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+
+    int status = sys_filesize(file_number);
+    f->eax = status;
+}
+
+static void sys_close(int file_number){
+    lock_acquire(&sys_lock);
+    struct file_info *fi = NULL;
+    if(!list_empty(&thread_current()->file_list)){
+        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+              if(curr_info->id == file_number){
+                  fi = curr_info;
+                  break;
+              }
+          }
+          if(fi == NULL){
+              lock_release(&sys_lock);
+              return;
+          }
+    }else{
+      lock_release(&sys_lock);
+      return;
+    }
+
+    thread_current()->open_file_count --;
+    file_close(fi->filename);
+    list_remove(&fi->elem);
+    lock_release(&sys_lock);
+
+}
+
+void close_handler(struct intr_frame *f)
+{
+    int file_number;
+
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+
+    sys_close(file_number);
+}
+
+static int sys_wait(int file_number){
+    int status = process_wait(file_number);
+    return status;
+}
+
+void wait_handler(struct intr_frame *f)
+{
+    int file_number;
+    
+    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+
+    int status = sys_wait(file_number);
+    f->eax = status;
+}
+
+static int sys_exec(void* command_line){
+    lock_acquire(&sys_lock);
+    int status = process_execute(command_line);
+    lock_release(&sys_lock);
+    return status;
+}
+
+void exec_handler(struct intr_frame *f)
+{
+    void* command_line;
+    
+    umem_read(f->esp + 4, &command_line, sizeof(command_line));
+
+    int status = sys_exec(command_line);
+    f->eax = status;
 }
