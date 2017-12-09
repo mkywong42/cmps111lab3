@@ -257,6 +257,13 @@ process_exit(void)
 // own source file. Define them in your header file and include 
 // that .h in this .c file.
 // *****************************************************************
+
+/*
+*   Helper function that searches through the current thread's list of open files
+*   Returns the file_info for the file with the file id that equals file_number
+*   Returns NULL if the file is not found or if the current thread's list of open files
+*   is empty
+*/
 static struct file_info* find_file_by_id(int file_number){
     struct file_info *fi = NULL;
     if(!list_empty(&thread_current()->file_list)){
@@ -280,6 +287,10 @@ static struct file_info* find_file_by_id(int file_number){
     return fi;
 }
 
+/*
+*   Implementation for exit_handler();
+*   Exits the current thread and updates the thread's exit code
+*/
 void sys_exit(int status) 
 {
   printf("%s: exit(%d)\n", thread_current()->name, status);
@@ -287,6 +298,9 @@ void sys_exit(int status)
   thread_exit();
 }
 
+/*
+*   Exits the current thread and updates the thread's exit code
+*/
 void exit_handler(struct intr_frame *f) 
 {
   int exitcode;
@@ -321,6 +335,9 @@ static uint32_t sys_write(int fd, const void *buffer, unsigned size)
   return (uint32_t) ret;
 } 
 
+/*
+*   Writes a buffer contents of a certain size to a file
+*/
 void write_handler(struct intr_frame *f)
 {
     int fd;
@@ -334,6 +351,10 @@ void write_handler(struct intr_frame *f)
     f->eax = sys_write(fd, buffer, size);
 }
 
+/*
+*   Implementation of create_handler()
+*   Creates a file of name filename and of size size and returns if it was successful
+*/
 static bool sys_create(char* filename, int size){
     lock_acquire(&sys_lock);
     bool status = filesys_create(filename, size, false);
@@ -341,6 +362,9 @@ static bool sys_create(char* filename, int size){
     return status;
 }
 
+/*
+*   Creates a file of name filename and of size size and returns if it was successful
+*/
 void create_handler(struct intr_frame *f)
 {
     char* file;
@@ -353,6 +377,10 @@ void create_handler(struct intr_frame *f)
     f->eax = status;
 }
 
+/*
+*   Implementation of open_handler()
+*   Opens the file with name filename and returns the file id
+*/
 static int sys_open(char* filename){
     struct file_info *fi = palloc_get_page(0);
     lock_acquire(&sys_lock);
@@ -370,6 +398,9 @@ static int sys_open(char* filename){
     return fi->id;
 }
 
+/*
+*   Opens the file with name filename and returns the file id
+*/
 void open_handler(struct intr_frame *f)
 {
     char* file;
@@ -380,6 +411,10 @@ void open_handler(struct intr_frame *f)
     f->eax = status;
 }
 
+/*  Implementation of read_handler()
+*   Reads a file with file descriptor file_num into buffer
+*   Reads only a certain size of the file and returns the number of bytes read
+*/
 static int sys_read(int file_num, void* buffer, int size){
     lock_acquire(&sys_lock);
     struct file_info *fi = NULL;
@@ -391,6 +426,9 @@ static int sys_read(int file_num, void* buffer, int size){
     return status;
 }
 
+/*  Reads a file with file descriptor file_num into buffer
+*   Reads only a certain size of the file and returns the number of bytes read
+*/
 void read_handler(struct intr_frame *f)
 {
     int file_number;
@@ -405,6 +443,9 @@ void read_handler(struct intr_frame *f)
     f->eax = status;
 }
 
+/*  Implementation of filesize_handler()
+*   Returns the size of a file specified by file_number
+*/
 static int sys_filesize(int file_number){
     lock_acquire(&sys_lock);
     struct file_info *fi = NULL;
@@ -416,6 +457,9 @@ static int sys_filesize(int file_number){
     return status;
 }
 
+/* 
+*   Returns the size of a file specified by file_number
+*/
 void filesize_handler(struct intr_frame *f)
 {
     int file_number;
@@ -426,6 +470,10 @@ void filesize_handler(struct intr_frame *f)
     f->eax = status;
 }
 
+/*
+*   Implementation of close_handler()
+*   Closes the file specified by file_number
+*/
 static int sys_close(int file_number){
     lock_acquire(&sys_lock);
 
@@ -440,6 +488,9 @@ static int sys_close(int file_number){
     return 0;
 }
 
+/*
+*   Closes the file specified by file_number
+*/
 void close_handler(struct intr_frame *f)
 {
     int file_number;
@@ -449,21 +500,31 @@ void close_handler(struct intr_frame *f)
     sys_close(file_number);
 }
 
-static int sys_wait(int file_number){
-    int status = process_wait(file_number);
+/*  Implemenation of wait_handler()
+*   Makes the thread specified by thread_number wait 
+*/
+static int sys_wait(int thread_number){
+    int status = process_wait(thread_number);
     return status;
 }
 
+/*
+*   Makes the thread specified by thread_number wait
+*/
 void wait_handler(struct intr_frame *f)
 {
-    int file_number;
+    int thread_number;
     
-    umem_read(f->esp + 4, &file_number, sizeof(file_number));
+    umem_read(f->esp + 4, &thread_number, sizeof(thread_number));
 
-    int status = sys_wait(file_number);
+    int status = sys_wait(thread_number);
     f->eax = status;
 }
 
+/*
+*   Implemenation of exec_handler()
+*   Executes the commandline and returns the thread ID of the created process
+*/
 static int sys_exec(void* command_line){
     lock_acquire(&sys_lock);
     int status = process_execute(command_line);
@@ -471,6 +532,9 @@ static int sys_exec(void* command_line){
     return status;
 }
 
+/*
+*   Executes the commandline and returns the thread ID of the created process
+*/
 void exec_handler(struct intr_frame *f)
 {
     void* command_line;
