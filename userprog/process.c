@@ -57,13 +57,6 @@
 #include "devices/timer.h"
 #include "threads/semaphore.h"
 
-// *****************************************************************
-// CMPS111 Lab 3 : Remove the comment on this literal when you are 
-// ready to start testing command line arguments
-// *****************************************************************
-// #define COMMAND_ARGUMENTS
-// bool load(const char *cmdline, void (**eip) (void), void **esp);
-
 /* Sets up the CPU for running user code in the current
    thread.
    This function is called on every context switch. */

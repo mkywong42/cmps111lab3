@@ -30,6 +30,11 @@
 
 static thread_func start_process NO_RETURN;
 
+// *****************************************************************
+// CMPS111 Lab 3 : Remove the comment on this literal when you are 
+// ready to start testing command line arguments
+// *****************************************************************
+#define COMMAND_ARGUMENTS
 /*
  * Push the command and arguments found in CMDLINE onto the stack, world 
  * aligned with the stack pointer ESP. Should only be called after the ELF 
@@ -127,11 +132,15 @@ process_execute(const char *cmdline)
     semaphore_init(&init_block->waiter, 0);
 
     // Create a Kernel Thread for the new process
-    tid = thread_create(cmdline, PRI_DEFAULT, start_process, init_block);
+    char* pointer;
+    char* temp_copy = palloc_get_page(0);
+    strlcpy(temp_copy, init_block->cmdline, PGSIZE);
+    char* filename = strtok_r(temp_copy, " ", &pointer);
+    tid = thread_create(filename, PRI_DEFAULT, start_process, init_block);
 
     semaphore_down(&init_block->init_child);
     list_push_back(&(thread_current()->children_list), &(init_block->elem));
-    // timer_msleep(10);
+    timer_msleep(200);
 
     return tid;
 }
@@ -154,11 +163,14 @@ start_process(void *cmdline)
     pif.gs = pif.fs = pif.es = pif.ds = pif.ss = SEL_UDSEG;
     pif.cs = SEL_UCSEG;
     pif.eflags = FLAG_IF | FLAG_MBS;
-    success = load((char*)init_block->cmdline, &pif.eip, &pif.esp);
+    char* pointer;
+    char* temp_copy = palloc_get_page(0);
+    strlcpy(temp_copy, init_block->cmdline, PGSIZE);
+    char* filename = strtok_r(temp_copy, " ", &pointer);
+    success = load(filename, &pif.eip, &pif.esp);
     if (success) {
         push_command(init_block->cmdline, &pif.esp);
     }
-    // palloc_free_page(&init_block->cmdline);
 
     if (!success) {
         thread_exit();
@@ -245,6 +257,28 @@ process_exit(void)
 // own source file. Define them in your header file and include 
 // that .h in this .c file.
 // *****************************************************************
+static struct file_info* find_file_by_id(int file_number){
+    struct file_info *fi = NULL;
+    if(!list_empty(&thread_current()->file_list)){
+        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
+          curr = list_next(curr)){
+              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
+              if(curr_info->id == file_number){
+                  fi = curr_info;
+                  break;
+              }
+          }
+          if(fi == NULL){
+              lock_release(&sys_lock);
+              return NULL;
+          }
+    }else{
+      lock_release(&sys_lock);
+      return NULL;
+    }
+
+    return fi;
+}
 
 void sys_exit(int status) 
 {
@@ -278,23 +312,8 @@ static uint32_t sys_write(int fd, const void *buffer, unsigned size)
   }
 
   struct file_info *fi = NULL;
-  if(!list_empty(&thread_current()->file_list)){
-      for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
-          curr = list_next(curr)){
-          struct file_info *curr_info = list_entry(curr, struct file_info, elem);
-          if(curr_info->id == fd){
-              fi = curr_info;
-              break;
-          }
-      }
-      if(fi == NULL){
-          lock_release(&sys_lock);
-          return -1;
-      } 
-  }else{
-      lock_release(&sys_lock);
-      return -1;
-  }
+  fi = find_file_by_id(fd);
+  if(fi == NULL) return -1;
 
   ret = file_write(fi->filename, buffer, size);
   lock_release(&sys_lock);
@@ -364,23 +383,8 @@ void open_handler(struct intr_frame *f)
 static int sys_read(int file_num, void* buffer, int size){
     lock_acquire(&sys_lock);
     struct file_info *fi = NULL;
-    if(!list_empty(&thread_current()->file_list)){
-        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
-          curr = list_next(curr)){
-              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
-              if(curr_info->id == file_num){
-                  fi = curr_info;
-                  break;
-              }
-          }
-          if(fi == NULL){
-            lock_release(&sys_lock);
-            return -1;
-          } 
-    }else{
-      lock_release(&sys_lock);
-      return -1;
-    }
+    fi= find_file_by_id(file_num);
+    if(fi == NULL) return -1;
 
     int status = file_read(fi->filename, buffer, size);
     lock_release(&sys_lock);
@@ -404,23 +408,8 @@ void read_handler(struct intr_frame *f)
 static int sys_filesize(int file_number){
     lock_acquire(&sys_lock);
     struct file_info *fi = NULL;
-    if(!list_empty(&thread_current()->file_list)){
-        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
-          curr = list_next(curr)){
-              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
-              if(curr_info->id == file_number){
-                  fi = curr_info;
-                  break;
-              }
-          }
-          if(fi == NULL) {
-            lock_release(&sys_lock);
-            return -1;
-          }
-    }else{
-      lock_release(&sys_lock);
-      return -1;
-    }
+    fi = find_file_by_id(file_number);
+    if(fi == NULL) return -1;
 
     int status = file_length(fi->filename);
     lock_release(&sys_lock);
@@ -437,32 +426,18 @@ void filesize_handler(struct intr_frame *f)
     f->eax = status;
 }
 
-static void sys_close(int file_number){
+static int sys_close(int file_number){
     lock_acquire(&sys_lock);
+
     struct file_info *fi = NULL;
-    if(!list_empty(&thread_current()->file_list)){
-        for(struct list_elem *curr = list_front(&thread_current()->file_list); curr != list_end(&thread_current()->file_list);
-          curr = list_next(curr)){
-              struct file_info *curr_info = list_entry(curr, struct file_info, elem);
-              if(curr_info->id == file_number){
-                  fi = curr_info;
-                  break;
-              }
-          }
-          if(fi == NULL){
-              lock_release(&sys_lock);
-              return;
-          }
-    }else{
-      lock_release(&sys_lock);
-      return;
-    }
+    fi = find_file_by_id(file_number);
+    if(fi == NULL) return -1;
 
     thread_current()->open_file_count --;
     file_close(fi->filename);
     list_remove(&fi->elem);
     lock_release(&sys_lock);
-
+    return 0;
 }
 
 void close_handler(struct intr_frame *f)
